@@ -29,13 +29,9 @@ def crawl_exchanges_dates(exchange_name,symbol,timeframe,aver1,aver2,aver3,aver4
         print(start_time)
 
         date = exchange.fetch_ohlcv(symbol, timeframe=timeframe, since=start_time_stamp, limit=1000)
-        if not isinstance(date, list):
-            print(f"{symbol}数据不是数组")
-            return None, None, None, None, None, None, None, None, None, None, None, None
-        
         if len(date) == 0:
             print(f"{symbol}数据为空")
-            return None, None, None, None, None, None, None, None, None, None, None, None
+            return
         df = pd.DataFrame(date)
         df.rename(columns={0:'open_time',1:'open',2:'high',3:'low',4:'close',5:'volume'},inplace=True)
 
@@ -55,7 +51,7 @@ def crawl_exchanges_dates(exchange_name,symbol,timeframe,aver1,aver2,aver3,aver4
         df[f'ma{aver7}'] = ta.MA(df['close'], timeperiod=aver7)
         df[f'ma{aver8}'] = ta.MA(df['close'], timeperiod=aver8)
 
-    # print(df)
+        print(df)
 
         x1 = df.iloc[-2][f'ma{aver1}']
         x2 = df.iloc[-2][f'ma{aver2}']
@@ -87,9 +83,8 @@ def crawl_exchanges_dates(exchange_name,symbol,timeframe,aver1,aver2,aver3,aver4
         #     print(f'币安日线20均线下方百分之10以内一共{len(binan4Hk)}个')
         #     print("*" * 40)
     except:
-        print(f"{symbol}交易对请求错误，跳过")
-        return None, None, None, None, None, None, None, None, None, None, None, None
-
+        print(f"{symbol}数据请求错误，跳过")
+        return
 
 if __name__=='__main__':
 

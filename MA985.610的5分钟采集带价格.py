@@ -23,7 +23,7 @@ BINANCE_LIMIT = 500
 binan5m = {}
 
 def crawl_exchanges_dates(exchange_name,symbol,start_time,end_time):
-
+    
     exchange_class = getattr(ccxt,exchange_name) #获取交易所名称，ccxt.binance
     exchange = exchange_class()  #交易所的类，类似ssxt.bitfinex（）
     print(exchange)
@@ -52,12 +52,10 @@ def crawl_exchanges_dates(exchange_name,symbol,start_time,end_time):
 
     while True:
         try:
-
-            # print(start_time_stamp)
             date = exchange.fetch_ohlcv(symbol,timeframe='5m',since=start_time_stamp,limit=500)
             if len(date) == 0:
                 print(f"{symbol}数据为空")
-                return None, None, None, None, None, None, None, None, None, None, None, None
+                return
             df = pd.DataFrame(date)
             df.rename(columns={0:'open_time',1:'open',2:'high',3:'low',4:'close',5:'volume'},inplace=True)
 

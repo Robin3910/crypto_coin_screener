@@ -17,43 +17,44 @@ binan4Hv = []
 pd.set_option('expand_frame_repr', False)
 
 def crawl_exchanges_dates(exchange_name,symbol,timeframe,aver1,aver2,aver3,aver4,aver5,aver6,aver7,aver8,manymin):
-    exchange_class = getattr(ccxt,exchange_name) #获取交易所名称，ccxt.binance
-    exchange = exchange_class()  #交易所的类，类似ssxt.bitfinex（）
-    print(exchange)
-
-    last = time.time() - (aver8 + 5) * 60 * manymin
-    start = time.localtime(last)
-    start_time = time.strftime("%Y-%m-%d", start)
-    start_time = datetime.datetime.strptime(start_time, '%Y-%m-%d')
-    start_time_stamp = int(time.mktime(start_time.timetuple())) *1000
-    print(start_time)
-
-    date = exchange.fetch_ohlcv(symbol, timeframe=timeframe, since=start_time_stamp, limit=1000)
-    if len(date) == 0:
-        print(f"{symbol}数据为空")
-        return None, None, None, None, None, None, None, None, None, None, None, None
-    df = pd.DataFrame(date)
-    df.rename(columns={0:'open_time',1:'open',2:'high',3:'low',4:'close',5:'volume'},inplace=True)
-
-    df['open_time'] = df['open_time'].apply(lambda x: (x // 60) * 60)
-    df['Datetime'] = pd.to_datetime(df['open_time'], unit='ms') + pd.Timedelta(hours=8)
-    df['Datetime'] = df['Datetime'].apply(lambda x: str(x)[0:19])
-    df.drop_duplicates(subset=['open_time'], inplace=True)
-    df.set_index('Datetime', inplace=True)
-    print("*" * 20)
-
-    df[f'ma{aver1}'] = ta.MA(df['close'], timeperiod=aver1)
-    df[f'ma{aver2}'] = ta.MA(df['close'], timeperiod=aver2)
-    df[f'ma{aver3}'] = ta.MA(df['close'], timeperiod=aver3)
-    df[f'ma{aver4}'] = ta.MA(df['close'], timeperiod=aver4)
-    df[f'ma{aver5}'] = ta.MA(df['close'], timeperiod=aver5)
-    df[f'ma{aver6}'] = ta.MA(df['close'], timeperiod=aver6)
-    df[f'ma{aver7}'] = ta.MA(df['close'], timeperiod=aver7)
-    df[f'ma{aver8}'] = ta.MA(df['close'], timeperiod=aver8)
-
-    print(df)
-
     try:
+        exchange_class = getattr(ccxt,exchange_name) #获取交易所名称，ccxt.binance
+        exchange = exchange_class()  #交易所的类，类似ssxt.bitfinex（）
+        print(exchange)
+
+        last = time.time() - (aver8 + 5) * 60 * manymin
+        start = time.localtime(last)
+        start_time = time.strftime("%Y-%m-%d", start)
+        start_time = datetime.datetime.strptime(start_time, '%Y-%m-%d')
+        start_time_stamp = int(time.mktime(start_time.timetuple())) *1000
+        print(start_time)
+
+        date = exchange.fetch_ohlcv(symbol, timeframe=timeframe, since=start_time_stamp, limit=1000)
+        if len(date) == 0:
+            print(f"{symbol}数据为空")
+            return
+        df = pd.DataFrame(date)
+        df.rename(columns={0:'open_time',1:'open',2:'high',3:'low',4:'close',5:'volume'},inplace=True)
+
+        df['open_time'] = df['open_time'].apply(lambda x: (x // 60) * 60)
+        df['Datetime'] = pd.to_datetime(df['open_time'], unit='ms') + pd.Timedelta(hours=8)
+        df['Datetime'] = df['Datetime'].apply(lambda x: str(x)[0:19])
+        df.drop_duplicates(subset=['open_time'], inplace=True)
+        df.set_index('Datetime', inplace=True)
+        print("*" * 20)
+
+        df[f'ma{aver1}'] = ta.MA(df['close'], timeperiod=aver1)
+        df[f'ma{aver2}'] = ta.MA(df['close'], timeperiod=aver2)
+        df[f'ma{aver3}'] = ta.MA(df['close'], timeperiod=aver3)
+        df[f'ma{aver4}'] = ta.MA(df['close'], timeperiod=aver4)
+        df[f'ma{aver5}'] = ta.MA(df['close'], timeperiod=aver5)
+        df[f'ma{aver6}'] = ta.MA(df['close'], timeperiod=aver6)
+        df[f'ma{aver7}'] = ta.MA(df['close'], timeperiod=aver7)
+        df[f'ma{aver8}'] = ta.MA(df['close'], timeperiod=aver8)
+
+
+
+
         x1 = df.iloc[-2][f'ma{aver1}']
         x2 = df.iloc[-2][f'ma{aver2}']
         x3 = df.iloc[-2][f'ma{aver3}']
@@ -64,24 +65,10 @@ def crawl_exchanges_dates(exchange_name,symbol,timeframe,aver1,aver2,aver3,aver4
         x8 = df.iloc[-2][f'ma{aver8}']
         ma = df.iloc[-2]['close']
         return x1,x2,x3,x4,x5,x6,x7,x8,ma
-        # exit()
-        # ma2020 = ma20 - ma20 * 0.1
-        # ma = df.iloc[-2]['close']
-        #
-        # if  ma20 > ma > ma2020:
-        #
-        #     binan4Hk.append(symbol)
-        #     binan4Hv.append(ma)
-        #     print(f'{symbol}符合')
-        # else:
-        #
-        #     print(f'{symbol}不符合')
-        #
-        #     print(binan4Hk)
-        #     print(f'币安日线20均线下方百分之10以内一共{len(binan4Hk)}个')
-        #     print("*" * 40)
-    except IndexError:
-        pass
+       
+    except:
+        print(f"{symbol}数据请求错误，跳过")
+        return
 
 
 if __name__=='__main__':

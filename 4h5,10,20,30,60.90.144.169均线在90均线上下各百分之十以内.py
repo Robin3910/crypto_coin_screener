@@ -1,13 +1,5 @@
+
 #-*- codeing = utf-8 -*-
-#@Time : 2021/11/18 17:59
-#@Author : 赵旭辉
-#@File : MA4小时多均线接近.py
-#@Software ： PyCharm
-#-*- codeing = utf-8 -*-
-#@Time : 2021/10/31 12:30
-#@Author : 赵旭辉
-#@File : 第二十二课ccxt爬取交易所数据.py
-#@Software ： PyCharm
 
 import pandas as pd
 import time
@@ -36,7 +28,7 @@ def crawl_exchanges_dates(exchange_name,symbol,timeframe,aver1,aver2,aver3,aver4
         date = exchange.fetch_ohlcv(symbol, timeframe=timeframe, since=start_time_stamp, limit=1000)
         if len(date) == 0:
             print(f"{symbol}数据为空")
-            return None, None, None, None, None, None, None, None, None, None, None, None
+            return
         df = pd.DataFrame(date)
         df.rename(columns={0:'open_time',1:'open',2:'high',3:'low',4:'close',5:'volume'},inplace=True)
 
@@ -68,25 +60,10 @@ def crawl_exchanges_dates(exchange_name,symbol,timeframe,aver1,aver2,aver3,aver4
         x8 = df.iloc[-2][f'ma{aver8}']
         ma = df.iloc[-2]['close']
         return x1,x2,x3,x4,x5,x6,x7,x8,ma
-        # exit()
-        # ma2020 = ma20 - ma20 * 0.1
-        # ma = df.iloc[-2]['close']
-        #
-        # if  ma20 > ma > ma2020:
-        #
-        #     binan4Hk.append(symbol)
-        #     binan4Hv.append(ma)
-        #     print(f'{symbol}符合')
-        # else:
-        #
-        #     print(f'{symbol}不符合')
-        #
-        #     print(binan4Hk)
-        #     print(f'币安日线20均线下方百分之10以内一共{len(binan4Hk)}个')
-        #     print("*" * 40)
+
     except:
         print(f"{symbol}数据请求错误，跳过")
-        return None, None, None, None, None, None, None, None, None, None, None, None
+        return
 
 
 if __name__=='__main__':

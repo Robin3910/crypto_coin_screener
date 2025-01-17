@@ -1,8 +1,5 @@
 #-*- codeing = utf-8 -*-
-#@Time : 2021/11/30 15:56
-#@Author : 赵旭辉
-#@File : 十字星测试.py
-#@Software ： PyCharm
+
 
 import pandas as pd
 import time
@@ -32,7 +29,7 @@ def crawl_exchanges_dates(exchange_name,symbol,timeframe,aver1,aver2,aver3,aver4
         date = exchange.fetch_ohlcv(symbol, timeframe=timeframe, since=start_time_stamp, limit=1000)
         if len(date) == 0:
             print(f"{symbol}数据为空")
-            return None, None, None, None, None, None, None, None, None, None, None, None
+            return
 
 
         df = pd.DataFrame(date)
@@ -56,42 +53,39 @@ def crawl_exchanges_dates(exchange_name,symbol,timeframe,aver1,aver2,aver3,aver4
 
         # print(df)
 
-        try:
-            x1 = df.iloc[-2][f'ma{aver1}']
-            x2 = df.iloc[-2][f'ma{aver2}']
-            x3 = df.iloc[-2][f'ma{aver3}']
-            x4 = df.iloc[-2][f'ma{aver4}']
-            x5 = df.iloc[-2][f'ma{aver5}']
-            x6 = df.iloc[-2][f'ma{aver6}']
-            x7 = df.iloc[-2][f'ma{aver7}']
-            x8 = df.iloc[-2][f'ma{aver8}']
-            maclose = df.iloc[-2]['close']
-            maopen = df.iloc[-2]['open']
-            mahigh = df.iloc[-2]['high']
-            malow = df.iloc[-2]['low']
-            return x1,x2,x3,x4,x5,x6,x7,x8,maclose,maopen,mahigh,malow
-            # exit()
-            # ma2020 = ma20 - ma20 * 0.1
-            # ma = df.iloc[-2]['close']
-            #
-            # if  ma20 > ma > ma2020:
-            #
-            #     binan4Hk.append(symbol)
-            #     binan4Hv.append(ma)
-            #     print(f'{symbol}符合')
-            # else:
-            #
-            #     print(f'{symbol}不符合')
-            #
-            #     print(binan4Hk)
-            #     print(f'币安日线20均线下方百分之10以内一共{len(binan4Hk)}个')
-            #     print("*" * 40)
-        except IndexError:
-            pass
+        x1 = df.iloc[-2][f'ma{aver1}']
+        x2 = df.iloc[-2][f'ma{aver2}']
+        x3 = df.iloc[-2][f'ma{aver3}']
+        x4 = df.iloc[-2][f'ma{aver4}']
+        x5 = df.iloc[-2][f'ma{aver5}']
+        x6 = df.iloc[-2][f'ma{aver6}']
+        x7 = df.iloc[-2][f'ma{aver7}']
+        x8 = df.iloc[-2][f'ma{aver8}']
+        maclose = df.iloc[-2]['close']
+        maopen = df.iloc[-2]['open']
+        mahigh = df.iloc[-2]['high']
+        malow = df.iloc[-2]['low']
+        return x1,x2,x3,x4,x5,x6,x7,x8,maclose,maopen,mahigh,malow
+        # exit()
+        # ma2020 = ma20 - ma20 * 0.1
+        # ma = df.iloc[-2]['close']
+        #
+        # if  ma20 > ma > ma2020:
+        #
+        #     binan4Hk.append(symbol)
+        #     binan4Hv.append(ma)
+        #     print(f'{symbol}符合')
+        # else:
+        #
+        #     print(f'{symbol}不符合')
+        #
+        #     print(binan4Hk)
+        #     print(f'币安日线20均线下方百分之10以内一共{len(binan4Hk)}个')
+        #     print("*" * 40)
 
     except Exception as e:
         print(f"处理{symbol}时发生错误: {str(e)}")
-        return None, None, None, None, None, None, None, None, None, None, None, None
+        return
 
 
 if __name__=='__main__':
@@ -105,7 +99,7 @@ if __name__=='__main__':
         if symbol[-4:] == 'USDT':
             usdts.append(symbol)
     print(len(usdts))
-    hma5, hma10, hma20, hma30, hma60, hma90, hma144, hma169, hmaclose, hmaopen, hmahigh, hmalow = crawl_exchanges_dates('binance', "BTCSTUSDT", '1d', 5, 6, 7, 8, 9, 10, 11, 12, 1440)
+    # hma5, hma10, hma20, hma30, hma60, hma90, hma144, hma169, hmaclose, hmaopen, hmahigh, hmalow = crawl_exchanges_dates('binance', "BTCSTUSDT", '1d', 5, 6, 7, 8, 9, 10, 11, 12, 1440)
 
     for usdt in usdts:
         try:
